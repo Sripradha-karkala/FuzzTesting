@@ -127,6 +127,23 @@ void test_dup2(int oldfd, int newfd){
         }
 }
 
+void test_fork(){
+        pid_t fd  = fork();
+        if(fd == getpid())
+        {
+                printf("In parent process\n");
+        }
+        else if(fd == -1)
+        {
+                printf("Fork failed\n");
+        }
+	else{
+		printf("In child process\n");
+		exit(0);
+	}
+}
+
+
 int main(){
         size_t size = 3;
 	off_t set = 3;
@@ -145,6 +162,7 @@ int main(){
 	test_write(fd, buf, size);
 	test_lseek(fd, set, SEEK_SET);
 	test_dup2(fd, 4);
+	test_fork();
         return 0;
 }
 
