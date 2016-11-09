@@ -56,7 +56,7 @@ void test_brk(void *ptr){
 
 void test_sbrk(intptr_t inc){
         void * p = sbrk(inc);
-        if(p != (void*)-1)
+        if(p != NULL)
         {
                 printf("sbrk success\n");
         }
@@ -68,7 +68,7 @@ void test_sbrk(intptr_t inc){
 
 int test_open(char *filename, int flags){
         int fd = open(filename, flags);
-        if(fd)
+        if(fd != -1)
         {
                 printf("Open success\n");
         }
@@ -81,7 +81,7 @@ int test_open(char *filename, int flags){
 
 void test_read(int fd,void *buf, size_t count){
         ssize_t byte_count = read(fd, buf, count);
-        if(byte_count != 0)
+        if(byte_count != -1)
         {
                 printf("read success\n");
         }
@@ -93,7 +93,7 @@ void test_read(int fd,void *buf, size_t count){
 
 void test_write(int fd,void *buf, size_t count){
         ssize_t byte_count = write(fd, buf, count);
-        if(byte_count != 0)
+        if(byte_count != -1)
         {
                 printf("write success\n");
         }

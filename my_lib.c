@@ -27,16 +27,20 @@ static void setRate(){
 		success_rate = SUCCESS_RATE;
 }
 
+static void logInfo(const char * funcname){
+     printf("Function failed %s\n", funcname);
+}
 
 void *malloc(size_t size){
+	static void * (*real_malloc)(size_t) = NULL;
+        if(!real_malloc){
+                real_malloc = dlsym(RTLD_NEXT, "malloc");
+        }
 	if(chance() > success_rate)
 	{
+		logInfo(__func__);
 		success_rate=success_rate+1;
 		return  NULL;
-	}
-	static void * (*real_malloc)(size_t) = NULL;
-	if(!real_malloc){
-		real_malloc = dlsym(RTLD_NEXT, "malloc");
 	}
 	setRate();
 	return real_malloc(size);
@@ -45,6 +49,7 @@ void *malloc(size_t size){
 void *calloc(size_t nmem, size_t size){
 	if(chance() > success_rate)
 	{
+		logInfo(__func__);
 		success_rate=success_rate+1;
 		return NULL;
 	}
@@ -59,6 +64,7 @@ void *calloc(size_t nmem, size_t size){
 void *realloc(void *ptr, size_t size){
 	if(chance() > success_rate)
 	{
+		logInfo(__func__);
 		success_rate=success_rate+1;
 		return NULL;
 	}
@@ -73,6 +79,7 @@ void *realloc(void *ptr, size_t size){
 int brk(void *ptr){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -88,6 +95,7 @@ void * sbrk(intptr_t increment){
 	
  	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return NULL;
         }
@@ -104,6 +112,7 @@ void * sbrk(intptr_t increment){
 int open(const char *pathname, int flags){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -118,6 +127,7 @@ int open(const char *pathname, int flags){
 ssize_t read(int fd,void * buf, size_t count){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -132,6 +142,7 @@ ssize_t read(int fd,void * buf, size_t count){
 ssize_t write(int fd,void * buf, size_t count){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -147,6 +158,7 @@ ssize_t write(int fd,void * buf, size_t count){
 off_t lseek(int fd,off_t offset, int whence){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return (off_t) -1;
         }
@@ -162,6 +174,7 @@ off_t lseek(int fd,off_t offset, int whence){
 int dup2(int oldfd, int newfd){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -179,6 +192,7 @@ int dup2(int oldfd, int newfd){
 pid_t fork(){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -196,6 +210,7 @@ pid_t fork(){
 int socket(int domain, int type, int protocol){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -211,6 +226,7 @@ int socket(int domain, int type, int protocol){
 int accept(int socketfd, struct sockaddr* addr, socklen_t addrlen){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -226,6 +242,7 @@ int accept(int socketfd, struct sockaddr* addr, socklen_t addrlen){
 int bind(int socketfd, const struct sockaddr* addr, socklen_t addrlen){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
@@ -241,6 +258,7 @@ int bind(int socketfd, const struct sockaddr* addr, socklen_t addrlen){
 int connect(int socketfd, const struct sockaddr* addr, socklen_t addrlen){
 	if(chance() > success_rate)
         {
+		logInfo(__func__);
                 success_rate=success_rate+1;
                 return -1;
         }
