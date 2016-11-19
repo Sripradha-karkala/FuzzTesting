@@ -34,37 +34,35 @@ static void logInfo(const char * funcname,  float chance_fail){
 
 /*void *malloc(size_t size){
 	initialize();
-	static void * (*real_malloc)(size_t) = NULL;
-        if(!real_malloc){
-                real_malloc = dlsym(RTLD_NEXT, "malloc");
-        }
 	float chance_fail = chance();
-	if(chance_fail > SUCCESS_RATE)
-	{
+	if(chance_fail < SUCCESS_RATE){
+		static void * (*real_malloc)(size_t) = NULL;
+	        if(!real_malloc){
+        	        real_malloc = dlsym(RTLD_NEXT, "malloc");
+        	}
+		logInfo(__func__, chance_fail);
+	        return real_malloc(size);
+	}
 		logInfo(__func__,  chance_fail);
 		return  NULL;
-	}
-	logInfo(__func__, chance_fail);
-	return real_malloc(size);
-}
+}*/
 
 void *calloc(size_t nmem, size_t size){
 	initialize();
-	static void * (*real_calloc)(size_t, size_t) = NULL;
-        if(!real_calloc){
-                real_calloc = dlsym(RTLD_NEXT, "calloc");
-        }
 	float chance_fail = chance();
-	if(chance_fail > SUCCESS_RATE)
-	{
+	if(chance_fail < SUCCESS_RATE){
+		static void * (*real_calloc)(size_t, size_t) = NULL;
+	        if(!real_calloc){
+        	        real_calloc = dlsym(RTLD_NEXT, "calloc");
+        	}
 		logInfo(__func__, chance_fail);
-		return NULL;
+		return real_calloc(nmem, size);
 	}
 	logInfo(__func__, chance_fail);
-        return real_calloc(nmem, size);
+	return NULL;
 }
 
-void *realloc(void *ptr, size_t size){
+/*void *realloc(void *ptr, size_t size){
 	initialize();
 	static void * (*real_realloc)(void*, size_t) = NULL;
         if(!real_realloc){
@@ -230,7 +228,7 @@ int socket(int domain, int type, int protocol){
 	logInfo(__func__, chance_fail);
 	return real_socket(domain, type, protocol);
 }
-*/
+
 int accept(int socketfd, struct sockaddr* addr, socklen_t addrlen){
 	initialize();
 	static int (*real_accept)(int, struct sockaddr, socklen_t) = NULL;
@@ -246,7 +244,7 @@ int accept(int socketfd, struct sockaddr* addr, socklen_t addrlen){
 	logInfo(__func__, chance_fail);
         return real_accept(socketfd, *addr, addrlen);
 }
-/*
+
 int bind(int socketfd, const struct sockaddr* addr, socklen_t addrlen){
 	if(chance() > success_rate)
         {

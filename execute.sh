@@ -18,6 +18,6 @@ var=("date" "df" "dir" "dmesg" "echo" "domainname" "ed abc.txt" "cat abc.txt" "c
 for i in "${var[@]}" 
 do
 		echo "Executing program" "$i"
-		LD_PRELOAD=/home/osboxes/OS_Project/my_lib.so  $i >> logs/accept/output_"$i".out 2>&1
+		LD_PRELOAD=/home/osboxes/OS_Project/my_lib.so  $i >> logs/calloc/output_"$i".out 2>&1
 done
 #LD_PRELOAD=/home/osboxes/OS_Project/my_lib.so ls
