@@ -31,8 +31,8 @@ static float chance(){
 static void logInfo(const char * funcname,  float chance_fail){
      printf("Function  %s,  with random number : %f \n", funcname,  chance_fail);
 }
-
-/*void *malloc(size_t size){
+/*
+void *malloc(size_t size){
 	initialize();
 	float chance_fail = chance();
 	if(chance_fail < SUCCESS_RATE){
@@ -45,24 +45,24 @@ static void logInfo(const char * funcname,  float chance_fail){
 	}
 		logInfo(__func__,  chance_fail);
 		return  NULL;
-}*/
-
+}
+*/
 void *calloc(size_t nmem, size_t size){
-	initialize();
-	float chance_fail = chance();
-	if(chance_fail < SUCCESS_RATE){
-		static void * (*real_calloc)(size_t, size_t) = NULL;
-	        if(!real_calloc){
-        	        real_calloc = dlsym(RTLD_NEXT, "calloc");
-        	}
-		logInfo(__func__, chance_fail);
-		return real_calloc(nmem, size);
-	}
-	logInfo(__func__, chance_fail);
+//	initialize();
+//	float chance_fail = chance();
+//	if(chance_fail < SUCCESS_RATE){
+//		static void * (*real_calloc)(size_t, size_t) = NULL;
+//	        if(!real_calloc){
+  //      	        real_calloc = dlsym(RTLD_NEXT, "calloc");
+    //    	}
+//		logInfo(__func__, 123.0);
+//		return real_calloc(nmem, size);
+//	}
+//	logInfo(__func__, chance_fail);
 	return NULL;
 }
-
-/*void *realloc(void *ptr, size_t size){
+/*
+void *realloc(void *ptr, size_t size){
 	initialize();
 	static void * (*real_realloc)(void*, size_t) = NULL;
         if(!real_realloc){
@@ -108,41 +108,42 @@ void * sbrk(intptr_t increment){
         }
 	setRate();
         return real_sbrk(increment);
-}*/
+}
 
 //File management functions
-
-/*int open(const char *pathname, int flags){
+int open(const char *pathname, int flags){
 	initialize();
-	static int (*real_open)(const char*,int) = NULL;
-        if(!real_open){
-                real_open = dlsym(RTLD_NEXT, "open");
-        }
 	float chance_fail = chance();
-	if(chance_fail > SUCCESS_RATE)
-        {
+
+	if(chance_fail < SUCCESS_RATE){
+		static int (*real_open)(const char*,int) = NULL;
+	        if(!real_open){
+        	        real_open = dlsym(RTLD_NEXT, "open");
+        	}	
+		logInfo(__func__, chance_fail);
+	        return real_open(pathname, flags);
+
+	}
 		logInfo(__func__, chance_fail);
                 return -1;
-        }
-	logInfo(__func__, chance_fail);
-	return real_open(pathname, flags);
 }
 
 
 ssize_t read(int fd,void * buf, size_t count){
 	initialize();
-	static ssize_t (*real_read)(int, void*, size_t) = NULL;
-        if(!real_read){
-                real_read = dlsym(RTLD_NEXT, "read");
-        }
 	float chance_fail = chance();
-	if(chance_fail > SUCCESS_RATE)
+	if(chance_fail < SUCCESS_RATE)
         {
+		static ssize_t (*real_read)(int, void*, size_t) = NULL;
+        	if(!real_read){
+	                real_read = dlsym(RTLD_NEXT, "read");
+        	}
+
 		logInfo(__func__, chance_fail);
-                return -1;
+                return real_read(fd, buf, count);
         }
 	logInfo(__func__, chance_fail);
-        return real_read(fd, buf,count);
+        return -1;
 }
 
 ssize_t write(int fd,void * buf, size_t count){
